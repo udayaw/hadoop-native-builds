@@ -172,6 +172,7 @@ Added additional cmake arg to build for arm in /hadoop-tools/hadoop-pipes/pom.xm
 
 ### Success
 
+![img](https://github.com/udayaw/osx-hadoop-native-libs/assets/2282417/688ea9b3-7c56-47b0-911b-7b79f1371e85)
 
 
 
