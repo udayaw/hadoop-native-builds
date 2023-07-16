@@ -225,6 +225,7 @@ Added additional cmake arg to build for arm in /hadoop-tools/hadoop-pipes/pom.xm
 
 
 ***Final Notes***
+
 Eventhough build succeeded on OSx, dll did not get linked properly. org.apache.hadoop.util.NativeClassLoader failed to init snappy.
 Although snappy lib installed was arm64 and libhadoop was build for x86_64. Also many issues with dylib cache etc.. decided never to attempt this further..
 
