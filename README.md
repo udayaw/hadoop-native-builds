@@ -215,13 +215,21 @@ Added additional cmake arg to build for arm in /hadoop-tools/hadoop-pipes/pom.xm
 ```
 
 
-### Success
+### Build Succeded
 
 ![img](https://github.com/udayaw/osx-hadoop-native-libs/assets/2282417/688ea9b3-7c56-47b0-911b-7b79f1371e85)
 
 
 
 `cp -R hadoop-dist/target/hadoop-<VERSION>/lib $HADOOP_HOME`
+
+
+***Final Notes***
+Eventhough build succeeded on OSx, dll did not get linked properly. org.apache.hadoop.util.NativeClassLoader failed to init snappy.
+Although snappy lib installed was arm64 and libhadoop was build for x86_64. Also many issues with dylib cache etc.. decided never to attempt this further..
+
+Will try to work with dockerized native build. I guess hadoop natives were never intended to be build for osx.
+
 
 
 ***References***
