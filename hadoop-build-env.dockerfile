@@ -185,13 +185,11 @@ RUN git clone https://github.com/apache/hadoop
 WORKDIR /root/hadoop
 
 RUN git checkout branch-2.10.2 \
-    && mvn dependency:resolve
+    && mvn package -q -Pdist,native -DskipTests -Dtar -Drequire.snappy \
+    && cp -r hadoop-dist/target/hadoop-2.10.2 /usr/local \
+    && rm -rf /root/hadoop
 
+WORKDIR /
 
-#RUN mvn package -Pdist,native -DskipTests -Dtar -Drequire.snappy -Dbundle.snappy
-
-## Add a welcome message and environment checks.
-#COPY hadoop_env_checks.sh /root/hadoop_env_checks.sh
-#RUN chmod 755 /root/hadoop_env_checks.sh
-## hadolint ignore=SC2016
-#RUN echo '${HOME}/hadoop_env_checks.sh' >> /root/.bashrc
+ENV HADOOP_HOME /usr/local/hadoop-2.10.2
+ENV PATH "${PATH}:$HADOOP_HOME/bin"
