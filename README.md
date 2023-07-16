@@ -1,5 +1,7 @@
 ### Building Native Hadoop Libraries for 2.10.1 on OSX Ventura
 
+I had to build hadoop native libraries to tryout org.apache.hadoop.io.compress.SnappyCodec
+
 Refer https://github.com/apache/hadoop/blob/trunk/BUILDING.txt for dependencies for specific versions.
 
 ***Brew install dependencies***
@@ -41,7 +43,7 @@ https://github.com/protocolbuffers/protobuf/issues/8836#issuecomment-892391885
 ```
 git clone https://github.com/apache/hadoop
 git checkout branch-2.10.1
-mvn package -Pdist,native -DskipTests -Dtar
+mvn package -Pdist,native -DskipTests -Dtar -Drequire.snappy -Dbundle.snappy -Dsnappy.lib=/opt/homebrew/Cellar/snappy/1.1.10/lib/
 ``` 
 
 ***Issue#1 :hadoop-common Missing ZLIB_LIBRARY***
@@ -102,7 +104,50 @@ after the line `cmake_minimum_required(VERSION 2.6 FATAL_ERROR)`
 Thank you! MarkDana.
 
 
-***Issue#2 :hadoop-yarn-server-nodemanager failed to link inline function alloc_and_clear_memory***
+***Issue#2 :hadoop-common Missing Snappy***
+
+
+
+```
+[WARNING] 
+[WARNING] CMake Error at CMakeLists.txt:94 (message):
+[WARNING]   Required snappy library could not be found.
+[WARNING]   SNAPPY_LIBRARY=SNAPPY_LIBRARY-NOTFOUND, SNAPPY_INCLUDE_DIR=,
+[WARNING]   CUSTOM_SNAPPY_INCLUDE_DIR=, CUSTOM_SNAPPY_PREFIX=, CUSTOM_SNAPPY_INCLUDE=
+[WARNING] 
+[WARNING] 
+[WARNING] -- Configuring incomplete, errors occurred!
+
+```
+update hadoop-common/pom.xml with `SNAPPY_LIBRARY` and `SNAPPY_INCLUDE_DIR`
+```
+<configuration>
+  <source>${basedir}/src</source>
+  <vars>
+    <GENERATED_JAVAH>${project.build.directory}/native/javah</GENERATED_JAVAH>
+    <JVM_ARCH_DATA_MODEL>${sun.arch.data.model}</JVM_ARCH_DATA_MODEL>
+    <REQUIRE_BZIP2>${require.bzip2}</REQUIRE_BZIP2>
+    <REQUIRE_SNAPPY>${require.snappy}</REQUIRE_SNAPPY>
+    <CUSTOM_SNAPPY_PREFIX>${snappy.prefix}</CUSTOM_SNAPPY_PREFIX>
+    <CUSTOM_SNAPPY_LIB>${snappy.lib} </CUSTOM_SNAPPY_LIB>
+    <CUSTOM_SNAPPY_INCLUDE>${snappy.include} </CUSTOM_SNAPPY_INCLUDE>
+    <REQUIRE_ZSTD>${require.zstd}</REQUIRE_ZSTD>
+    <CUSTOM_ZSTD_PREFIX>${zstd.prefix}</CUSTOM_ZSTD_PREFIX>
+    <CUSTOM_ZSTD_LIB>${zstd.lib}</CUSTOM_ZSTD_LIB>
+    <CUSTOM_ZSTD_INCLUDE>${zstd.include}</CUSTOM_ZSTD_INCLUDE>
+    <REQUIRE_OPENSSL>${require.openssl} </REQUIRE_OPENSSL>
+    <CUSTOM_OPENSSL_PREFIX>${openssl.prefix} </CUSTOM_OPENSSL_PREFIX>
+    <CUSTOM_OPENSSL_LIB>${openssl.lib} </CUSTOM_OPENSSL_LIB>
+    <CUSTOM_OPENSSL_INCLUDE>${openssl.include} </CUSTOM_OPENSSL_INCLUDE>
+    <EXTRA_LIBHADOOP_RPATH>${extra.libhadoop.rpath}</EXTRA_LIBHADOOP_RPATH>
+    <SNAPPY_LIBRARY>/opt/homebrew/Cellar/snappy/1.1.10/lib/</SNAPPY_LIBRARY>
+    <SNAPPY_INCLUDE_DIR>/opt/homebrew/Cellar/snappy/1.1.10/include/</SNAPPY_INCLUDE_DIR>
+  </vars>
+</configuration>
+```
+
+
+***Issue#3 :hadoop-yarn-server-nodemanager failed to link inline function alloc_and_clear_memory***
 ```[WARNING] Undefined symbols for architecture x86_64:
 [WARNING]   "_alloc_and_clear_memory", referenced from:
 [WARNING]       _get_docker_pull_command in libcontainer.a(docker-util.c.o)
@@ -127,7 +172,7 @@ inline void* alloc_and_clear_memory(size_t num, size_t size) {
 
 ```
 
-***Issue#3 :hadoop-pipes openssl link failures for 86_64 in Arm***
+***Issue#4 :hadoop-pipes openssl link failures for 86_64 in Arm***
 
 ```
 [WARNING] Undefined symbols for architecture x86_64:
