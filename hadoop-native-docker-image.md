@@ -2,16 +2,19 @@
 
 
 #### build environment
+
+
 ```shell
 
 #on arm it fails to resolve some libs
 docker build --platform linux/amd64 -t hadoop-build-2.10.2 -f hadoop-build-env.dockerfile .
 
+docker cp <container_id>:/root/hadoop/hadoop-dist/target/hadoop-2.10.2 ./hadoop-2.10.2
+docker build --platform linux/amd64 -t hadoop-2.10.2 -f hadoop-build-env.dockerfile .
 
 ```
 
-
-if all is good `docker run hadoop-build-2.10.2 hadoop checknative` should produce,
+if all is good `docker run hadoop-2.10.2 hadoop checknative` should produce,
 
 ```23/07/16 21:57:43 INFO bzip2.Bzip2Factory: Successfully loaded & initialized native-bzip2 library system-native
 23/07/16 21:57:43 INFO zlib.ZlibFactory: Successfully loaded & initialized native-zlib library

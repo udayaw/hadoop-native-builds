@@ -187,9 +187,3 @@ WORKDIR /root/hadoop
 RUN git checkout branch-2.10.2 \
     && mvn package -q -Pdist,native -DskipTests -Dtar -Drequire.snappy \
     && cp -r hadoop-dist/target/hadoop-2.10.2 /usr/local \
-    && rm -rf /root/hadoop
-
-WORKDIR /
-
-ENV HADOOP_HOME /usr/local/hadoop-2.10.2
-ENV PATH "${PATH}:$HADOOP_HOME/bin"
