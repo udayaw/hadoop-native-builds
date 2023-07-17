@@ -1,4 +1,5 @@
-#### Log
+### udayaw/hadoop-2.10.2
+https://hub.docker.com/repository/docker/udayaw/hadoop-2.10.2/general
 
 
 #### build environment
@@ -35,4 +36,11 @@ openssl: true /usr/lib/x86_64-linux-gnu/libcrypto.so
 docker tag hadoop-2.10.2 udayaw/hadoop-2.10.2
 docker push udayaw/hadoop-2.10.2
 
+```
+
+#### Usage
+
+To decompress sample snappy
+```
+hadoop fs -text my.snappy > my.text
 ```
