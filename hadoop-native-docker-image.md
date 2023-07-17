@@ -9,8 +9,8 @@
 #on arm it fails to resolve some libs
 docker build --platform linux/amd64 -t hadoop-build-2.10.2 -f hadoop-build-env.dockerfile .
 
-docker cp <container_id>:/root/hadoop/hadoop-dist/target/hadoop-2.10.2 ./hadoop-2.10.2
-docker build --platform linux/amd64 -t hadoop-2.10.2 -f hadoop-build-env.dockerfile .
+docker cp <container_id>:/root/hadoop/hadoop-dist/target/hadoop-2.10.2.tar.gz .
+docker build --platform linux/amd64 -t hadoop-2.10.2 -f hadoop-2.10.2.dockerfile .
 
 ```
 
@@ -32,7 +32,7 @@ openssl: true /usr/lib/x86_64-linux-gnu/libcrypto.so
 
 ```shell
 
-docker tag hadoop-build-2.10.2 udayaw/hadoop-2.10.2
+docker tag hadoop-2.10.2 udayaw/hadoop-2.10.2
 docker push udayaw/hadoop-2.10.2
 
 ```
